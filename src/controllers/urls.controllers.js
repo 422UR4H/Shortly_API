@@ -24,3 +24,14 @@ export async function openUrl(req, res) {
         res.status(500).send(err.message);
     }
 }
+
+export async function deleteUrl(req, res) {
+    const { id } = req.params;
+
+    try {
+
+        res.sendStatus(501); // 204
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+}
