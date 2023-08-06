@@ -1,10 +1,11 @@
 import { nanoid } from "nanoid";
-import { createLink, getLinkById } from "../repository/url.repository.js";
+import { createLink, deleteLink, getLinkById } from "../repository/url.repository.js";
 
 export async function shorten(req, res) {
     const userId = res.locals.user.id;
     const { url } = req.body;
     const shortUrl = nanoid();
+
     try {
         const result = await createLink({ userId, url, shortUrl });
         if (result.rowCount === 0) {
@@ -31,7 +32,7 @@ export async function getUrlById(req, res) {
     }
 }
 
-export async function openUrl(req, res) {
+export function openUrl(req, res) {
     const { shortUrl } = req.params;
     if (!shortUrl) return res.sendStatus(404);
 
@@ -44,12 +45,46 @@ export async function openUrl(req, res) {
 }
 
 export async function deleteUrl(req, res) {
+    const { user } = res.locals;
     const { id } = req.params;
 
     try {
+        const result = await deleteLink(id, user.id);
 
-        res.sendStatus(501); // 204
+        if (result.rowCount === 0) {
+            const resultLink = await getLinkById(id);
+
+            if (resultLink.rowCount === 0) {
+                return res.status(404).send("Esta url encurtada não existe!");
+            } else {
+                return res.status(401).send("Acesso negado!");
+            }
+        }
+        res.sendStatus(204);
     } catch (err) {
         res.status(500).send(err.message);
     }
 }
+
+// export async function deleteUrl(req, res) {
+//     const { user } = res.locals;
+//     const { id } = req.params;
+
+//     try {
+//         const result = await getLinkById(id);
+//         if (result.rowCount === 0) {
+//             return req.status(404).send("Esta url encurtada não existe!");
+//         }
+
+//         const { userId } = result.rows[0];
+//         if (userId !== user.id) {
+//             return res.status(401).send("Acesso negado!");
+//         }
+        
+//         const resultDel = await deleteLink(id, user.id);
+//         res.send({ id, shortUrl, url });
+//         res.sendStatus(204);
+//     } catch (err) {
+//         res.status(500).send(err.message);
+//     }
+// }
