@@ -1,5 +1,23 @@
+import { nanoid } from "nanoid";
+import { createLink } from "../repository/url.repository.js";
+
 export async function shorten(req, res) {
-    res.sendStatus(501); // 201
+    const userId = res.locals.user.id;
+    const { url } = req.body;
+    const shortUrl = nanoid();
+
+    try {
+        const result = await createLink({ userId, url, shortUrl });
+
+        if (result.rowCount === 0) {
+            return res.status(409).send("Não foi possível encurtar esta url!");
+        }
+        const { id } = result.rows[0];
+
+        res.status(201).send({ id, shortUrl });
+    } catch (err) {
+        res.status(500).send(err);
+    }
 }
 
 export async function getUrlById(req, res) {
