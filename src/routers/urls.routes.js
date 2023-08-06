@@ -12,9 +12,9 @@ import {
 
 const router = Router();
 
-router.post("/urls/shorten", validateAuth(""), validateSchema(urlsSchema), shorten);
+router.post("/urls/shorten", validateAuth, validateSchema(urlsSchema), shorten);
 router.get("/urls/:id", getUrlById);
 router.get("/urls/open/:shortUrl", openUrl);
-router.delete("/urls/:id", validateAuth(""), deleteUrl);
+router.delete("/urls/:id", validateAuth, deleteUrl);
 
 export default router;
