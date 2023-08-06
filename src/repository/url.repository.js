@@ -1,7 +1,7 @@
 import { db } from "../database/db.connection.js";
 
 export function createUrlVisit(linkId) {
-    return db.query(`INSERT INTO visits (linkId) VALUES ($1);`, [linkId]);
+    return db.query(`INSERT INTO visits ("linkId") VALUES ($1);`, [linkId]);
 }
 
 export function addUrlVisit(linkId) {
@@ -13,7 +13,7 @@ export function addUrlVisit(linkId) {
 export async function createLink(body) {
     const { userId, url, shortUrl } = body;
     const result = await db.query(
-        `INSERT INTO links (userId, url, shortUrl)
+        `INSERT INTO links ("userId", url, "shortUrl")
         VALUES ($1, $2, $3) RETURNING id;`,
         [userId, url, shortUrl]
     );
@@ -22,4 +22,8 @@ export async function createLink(body) {
 
     createUrlVisit(id);
     return result;
+}
+
+export function getLinkById(id) {
+    return db.query(`SELECT "shortUrl", url FROM links WHERE id = $1;`, [id]);
 }
