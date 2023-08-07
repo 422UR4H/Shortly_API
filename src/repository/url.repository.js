@@ -30,6 +30,16 @@ export function getLinksByUser(id) {
     );
 }
 
+export function addVisitCount(shortUrl) {
+    return db.query(
+        `UPDATE links
+        SET "visitCount" = "visitCount" + 1
+        WHERE "shortUrl" = $1
+        RETURNING url`,
+        [shortUrl]
+    );
+}
+
 export function getVisitsSum(id) {
     return db.query(
         `SELECT SUM("visitCount")

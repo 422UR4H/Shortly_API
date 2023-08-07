@@ -1,5 +1,10 @@
 import { nanoid } from "nanoid";
-import { createLink, deleteLink, getLinkById } from "../repository/url.repository.js";
+import {
+    addVisitCount,
+    createLink,
+    deleteLink,
+    getLinkById
+} from "../repository/url.repository.js";
 
 
 export async function shorten(req, res) {
@@ -33,13 +38,14 @@ export async function getUrlById(req, res) {
     }
 }
 
-export function openUrl(req, res) {
+export async function openUrl(req, res) {
     const { shortUrl } = req.params;
-    if (!shortUrl) return res.sendStatus(404);
-
     try {
-
-        res.sendStatus(501); // res.redirect
+        const result = await addVisitCount(shortUrl);
+        if (result.rowCount === 0) {
+            return res.status(404).send("Esta url encurtada não existe!");
+        }
+        res.redirect(result.rows[0].url);
     } catch (err) {
         res.status(500).send(err.message);
     }
