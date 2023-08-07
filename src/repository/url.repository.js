@@ -3,6 +3,8 @@ import { db } from "../database/db.connection.js";
 
 export function createLink(body) {
     const { userId, url, shortUrl } = body;
+    console.log("REPO")
+    console.log({ userId, url, shortUrl })
     return db.query(
         `INSERT INTO links
             ("userId", url, "shortUrl")
@@ -56,5 +58,12 @@ export function deleteLink(id, userId) {
         AND "userId" = $2
         RETURNING *;`,
         [id, userId]
+    );
+}
+
+export function getRankCount() {
+    return db.query(
+        `SELECT users.id, users.name, 
+        FROM users`
     );
 }

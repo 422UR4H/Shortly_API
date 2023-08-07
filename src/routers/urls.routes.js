@@ -4,6 +4,7 @@ import validateSchema from "../middlewares/validateSchema.js";
 import validateAuth from "../middlewares/validateAuth.js";
 import {
     deleteUrl,
+    getRanking,
     getUrlById,
     openUrl,
     shorten
@@ -16,5 +17,6 @@ router.post("/urls/shorten", validateAuth, validateSchema(urlsSchema), shorten);
 router.get("/urls/:id", getUrlById);
 router.get("/urls/open/:shortUrl", openUrl);
 router.delete("/urls/:id", validateAuth, deleteUrl);
+router.get("/ranking", getRanking)
 
 export default router;
