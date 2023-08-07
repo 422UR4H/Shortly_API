@@ -1,7 +1,9 @@
 import { createUser, getUserByEmail } from "../repository/auth.repository.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import dayjs from "dayjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 
 export async function signup(req, res) {
@@ -38,7 +40,7 @@ export async function signin(req, res) {
         }
         const token = jwt.sign(
             { id: user.id },
-            process.env.SECRET_JWT,
+            process.env.SECRET_JWT || "test",
             { expiresIn: 24 * 60 * 60 }
         );
         res.send({ token });
