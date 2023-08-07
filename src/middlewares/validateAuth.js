@@ -10,7 +10,7 @@ export default function validateAuth(req, res, next) {
     if (!token) return res.sendStatus(401);
 
     try {
-        jwt.verify(token, process.env.SECRET_JWT, async (error, decoded) => {
+        jwt.verify(token, process.env.SECRET_JWT || "test", async (error, decoded) => {
             if (error) return res.sendStatus(401);
 
             const user = (await getUserById(decoded.id)).rows[0];

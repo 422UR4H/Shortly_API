@@ -22,6 +22,23 @@ export function getLinkById(id) {
     );
 }
 
+export function getLinksByUser(id) {
+    return db.query(
+        `SELECT * FROM links
+        WHERE "userId" = $1;`,
+        [id]
+    );
+}
+
+export function getVisitsSum(id) {
+    return db.query(
+        `SELECT SUM("visitCount")
+        FROM links
+        WHERE "userId" = $1`,
+        [id]
+    );
+}
+
 export function deleteLink(id, userId) {
     return db.query(
         `DELETE FROM links

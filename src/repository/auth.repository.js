@@ -6,7 +6,7 @@ export function createUser(body) {
         `INSERT INTO users (name, email, password)
         VALUES ($1, $2, $3)
         ON CONFLICT (email) DO NOTHING
-        RETURNING *`,
+        RETURNING *;`,
         [name, email, password]
     );
 }
@@ -14,7 +14,7 @@ export function createUser(body) {
 export function getUserByEmail(email) {
     return db.query(
         `SELECT * FROM users
-        WHERE email = $1`,
+        WHERE email = $1;`,
         [email]
     );
 }
@@ -22,8 +22,17 @@ export function getUserByEmail(email) {
 export function getUserById(id) {
     return db.query(
         `SELECT * FROM users
-        WHERE id = $1`,
+        WHERE id = $1;`,
         [id]
     );
 }
 
+// export function getUserAndUrls(id) {
+//     return db.query(
+//         `SELECT users.name, links.*
+//         FROM users
+//         JOIN links ON users.id = links."userId"
+//         WHERE users.id = $1;`,
+//         [id]
+//     );
+// }

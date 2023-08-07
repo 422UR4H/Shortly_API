@@ -1,3 +1,4 @@
+import { getLinksByUser, getVisitsSum } from "../repository/url.repository.js";
 import { createUser, getUserByEmail } from "../repository/auth.repository.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -50,9 +51,17 @@ export async function signin(req, res) {
 }
 
 export async function getUserMe(req, res) {
-    const { user } = res.locals;
+    const { id, name } = res.locals.user;
     try {
-        res.send(user);
+        const visitCount = parseInt((await getVisitsSum(id)).rows[0].sum);
+        const result = await getLinksByUser(id);
+        const userMe = { id, name, visitCount };
+
+        userMe.shortenedUrls = result.rows.map(r => {
+            const { id, url, shortUrl, visitCount } = r;
+            return { id, url, shortUrl, visitCount };
+        });
+        res.send(userMe);
     } catch (err) {
         res.status(500).send(err.message);
     }
