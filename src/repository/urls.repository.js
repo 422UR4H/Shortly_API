@@ -33,7 +33,7 @@ export function addVisitCount(shortUrl) {
         `UPDATE links
         SET "visitCount" = "visitCount" + 1
         WHERE "shortUrl" = $1
-        RETURNING url`,
+        RETURNING url;`,
         [shortUrl]
     );
 }
@@ -42,7 +42,7 @@ export function getVisitsSum(id) {
     return db.query(
         `SELECT SUM("visitCount")
         FROM links
-        WHERE "userId" = $1`,
+        WHERE "userId" = $1;`,
         [id]
     );
 }
@@ -59,7 +59,8 @@ export function deleteLink(id, userId) {
 
 export function getRankCount() {
     return db.query(
-        `SELECT users.id, users.name, 
-        FROM users`
+        `SELECT users.id, users.name, SUM(links) AS "linksCount", SUM(links."visitCount")
+        FROM users
+        JOIN links ON users.id = links."userId";`
     );
 }

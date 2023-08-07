@@ -2,8 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.8 (Ubuntu 14.8-0ubuntu0.22.04.1)
--- Dumped by pg_dump version 14.8 (Ubuntu 14.8-0ubuntu0.22.04.1)
+-- Dumped from database version 15.3
+-- Dumped by pg_dump version 15.1
+
+-- Started on 2023-08-07 00:55:22 -03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -16,24 +18,35 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- TOC entry 5 (class 2615 OID 2200)
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
+-- TOC entry 217 (class 1259 OID 16623)
 -- Name: links; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.links (
     id integer NOT NULL,
-    userid integer,
+    "userId" integer,
     url character varying(255) NOT NULL,
-    visitcount bigint NOT NULL,
-    createdat timestamp without time zone DEFAULT now()
+    "shortUrl" character varying(64) NOT NULL,
+    "visitCount" integer DEFAULT 0,
+    "createdAt" timestamp without time zone DEFAULT now()
 );
 
 
 --
+-- TOC entry 216 (class 1259 OID 16622)
 -- Name: links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -47,6 +60,8 @@ CREATE SEQUENCE public.links_id_seq
 
 
 --
+-- TOC entry 3156 (class 0 OID 0)
+-- Dependencies: 216
 -- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -54,62 +69,13 @@ ALTER SEQUENCE public.links_id_seq OWNED BY public.links.id;
 
 
 --
--- Name: links_visitcount_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.links_visitcount_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: links_visitcount_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.links_visitcount_seq OWNED BY public.links.visitcount;
-
-
---
--- Name: sessions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sessions (
-    id integer NOT NULL,
-    userid integer,
-    createdat timestamp without time zone DEFAULT now()
-);
-
-
---
--- Name: sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.sessions_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
-
-
---
+-- TOC entry 215 (class 1259 OID 16613)
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.users (
     id integer NOT NULL,
-    createdat timestamp without time zone DEFAULT now(),
+    "createdAt" timestamp without time zone DEFAULT now(),
     name character varying(32) NOT NULL,
     email character varying(64) NOT NULL,
     password character varying(128) NOT NULL
@@ -117,6 +83,7 @@ CREATE TABLE public.users (
 
 
 --
+-- TOC entry 214 (class 1259 OID 16612)
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -130,6 +97,8 @@ CREATE SEQUENCE public.users_id_seq
 
 
 --
+-- TOC entry 3157 (class 0 OID 0)
+-- Dependencies: 214
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -137,6 +106,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- TOC entry 2999 (class 2604 OID 16626)
 -- Name: links id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -144,20 +114,7 @@ ALTER TABLE ONLY public.links ALTER COLUMN id SET DEFAULT nextval('public.links_
 
 
 --
--- Name: links visitcount; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.links ALTER COLUMN visitcount SET DEFAULT nextval('public.links_visitcount_seq'::regclass);
-
-
---
--- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.sessions_id_seq'::regclass);
-
-
---
+-- TOC entry 2997 (class 2604 OID 16616)
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -165,52 +122,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Data for Name: links; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- Name: links_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.links_id_seq', 1, false);
-
-
---
--- Name: links_visitcount_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.links_visitcount_seq', 1, false);
-
-
---
--- Name: sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.sessions_id_seq', 1, false);
-
-
---
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
-
-
---
+-- TOC entry 3007 (class 2606 OID 16630)
 -- Name: links links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -219,14 +131,7 @@ ALTER TABLE ONLY public.links
 
 
 --
--- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sessions
-    ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
-
-
---
+-- TOC entry 3003 (class 2606 OID 16621)
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -235,6 +140,7 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- TOC entry 3005 (class 2606 OID 16619)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -243,20 +149,15 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: links links_userid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- TOC entry 3008 (class 2606 OID 16631)
+-- Name: links links_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.links
-    ADD CONSTRAINT links_userid_fkey FOREIGN KEY (userid) REFERENCES public.users(id);
+    ADD CONSTRAINT "links_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id);
 
 
---
--- Name: sessions sessions_userid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sessions
-    ADD CONSTRAINT sessions_userid_fkey FOREIGN KEY (userid) REFERENCES public.users(id);
-
+-- Completed on 2023-08-07 00:55:49 -03
 
 --
 -- PostgreSQL database dump complete
