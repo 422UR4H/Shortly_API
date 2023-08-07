@@ -32,7 +32,7 @@ export async function getUrlById(req, res) {
     try {
         const result = await getLinkById(id);
         if (result.rowCount === 0) {
-            return req.status(404).send("Esta url encurtada não existe!");
+            return res.status(404).send("Esta url encurtada não existe!");
         }
         const { shortUrl, url } = result.rows[0];
         res.send({ id, shortUrl, url });
