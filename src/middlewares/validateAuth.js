@@ -22,6 +22,6 @@ export default function validateAuth(req, res, next) {
             return next();
         });
     } catch (err) {
-        res.status(502).send(err.message);
+        res.status(500).send(err.message);
     }
 }

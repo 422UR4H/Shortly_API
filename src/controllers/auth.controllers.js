@@ -1,4 +1,4 @@
-import { getLinksByUser, getVisitsSum } from "../repository/url.repository.js";
+import { getLinksByUser, getVisitsSum } from "../repository/urls.repository.js";
 import { createUser, getUserByEmail } from "../repository/auth.repository.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";

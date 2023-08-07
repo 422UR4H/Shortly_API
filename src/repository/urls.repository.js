@@ -3,14 +3,10 @@ import { db } from "../database/db.connection.js";
 
 export function createLink(body) {
     const { userId, url, shortUrl } = body;
-    console.log("REPO")
-    console.log({ userId, url, shortUrl })
     return db.query(
-        `INSERT INTO links
-            ("userId", url, "shortUrl")
-        VALUES
-            ($1, $2, $3)
-        RETURNING id;`,
+        `INSERT INTO links ("userId", url, "shortUrl")
+        VALUES ($1, $2, $3)
+        RETURNING *;`,
         [userId, url, shortUrl]
     );
 }

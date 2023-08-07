@@ -4,7 +4,7 @@ import {
     createLink,
     deleteLink,
     getLinkById
-} from "../repository/url.repository.js";
+} from "../repository/urls.repository.js";
 
 
 export async function shorten(req, res) {
@@ -23,7 +23,7 @@ export async function shorten(req, res) {
         const { id } = result.rows[0];
         res.status(201).send({ id, shortUrl });
     } catch (err) {
-        res.status(500).send(err);
+        res.status(500).send(err.message);
     }
 }
 
