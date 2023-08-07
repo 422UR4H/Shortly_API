@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { createLink, deleteLink, getLinkById } from "../repository/url.repository.js";
 
+
 export async function shorten(req, res) {
     const userId = res.locals.user.id;
     const { url } = req.body;

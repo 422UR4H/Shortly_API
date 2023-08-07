@@ -41,7 +41,7 @@ export async function signin(req, res) {
         }
         const token = jwt.sign(
             { id: user.id },
-            process.env.SECRET_JWT || "test",
+            process.env.JWT_SECRET || "test",
             { expiresIn: 24 * 60 * 60 }
         );
         res.send({ token });

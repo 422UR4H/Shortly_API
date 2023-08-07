@@ -10,10 +10,10 @@ export default function validateAuth(req, res, next) {
     if (!token) return res.sendStatus(401);
 
     try {
-        jwt.verify(token, process.env.SECRET_JWT || "test", async (error, decoded) => {
+        jwt.verify(token, process.env.JWT_SECRET || "test", async (error, decoded) => {
             if (error) return res.sendStatus(401);
 
-            const user = (await getUserById(decoded.id)).rows[0];
+            const user = (await getUserById(decoded.id))?.rows[0];
             if (!user) return res.sendStatus(404);
 
             delete user.password;
@@ -22,6 +22,6 @@ export default function validateAuth(req, res, next) {
             return next();
         });
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(502).send(err.message);
     }
 }
