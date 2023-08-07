@@ -8,15 +8,19 @@ import {
 
 
 export async function shorten(req, res) {
+    console.log("INICIO")
     const userId = res.locals.user.id;
     const { url } = req.body;
     const shortUrl = nanoid();
 
     try {
+        console.log({ userId, url, shortUrl })
         const result = await createLink({ userId, url, shortUrl });
         if (result.rowCount === 0) {
             return res.status(409).send("Não foi possível encurtar esta url!");
         }
+        console.log("RESULT")
+        console.log(result)
         const { id } = result.rows[0];
         res.status(201).send({ id, shortUrl });
     } catch (err) {
