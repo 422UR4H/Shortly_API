@@ -4,6 +4,7 @@ import {
     createLink,
     deleteLink,
     getLinkById,
+    getLinksByUser,
     getRankCount
 } from "../repository/urls.repository.js";
 
@@ -77,6 +78,16 @@ export async function deleteUrl(req, res) {
 export async function getRanking(req, res) {
     try {
         const result = await getRankCount();
+        res.send(result.rows);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+}
+
+export async function getLinks(req, res) {
+    const { id } = res.locals.user;
+    try {
+        const result = await getLinksByUser(id);
         res.send(result.rows);
     } catch (err) {
         res.status(500).send(err.message);

@@ -7,7 +7,8 @@ import {
     getRanking,
     getUrlById,
     openUrl,
-    shorten
+    shorten,
+    getLinks
 } from "../controllers/urls.controllers.js";
 
 
@@ -18,5 +19,6 @@ router.get("/urls/:id", getUrlById);
 router.get("/urls/open/:shortUrl", openUrl);
 router.delete("/urls/:id", validateAuth, deleteUrl);
 router.get("/ranking", getRanking)
+router.get("/urls", validateAuth, getLinks)
 
 export default router;
