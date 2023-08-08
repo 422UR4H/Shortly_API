@@ -59,8 +59,15 @@ export function deleteLink(id, userId) {
 
 export function getRankCount() {
     return db.query(
-        `SELECT users.id, users.name, COUNT(links) AS "linksCount", SUM(links."visitCount")
+        `SELECT
+            users.id,
+            users.name,
+            COUNT(links) AS "linksCount",
+            COALESCE(SUM(links."visitCount"), 0) AS "visitCount"
         FROM users
-        JOIN links ON users.id = links."userId";`
+        LEFT JOIN links ON users.id = links."userId"
+        GROUP BY users.id, users.name
+        ORDER BY "visitCount" DESC, "linksCount" DESC
+        LIMIT 10;`
     );
 }

@@ -3,7 +3,8 @@ import {
     addVisitCount,
     createLink,
     deleteLink,
-    getLinkById
+    getLinkById,
+    getRankCount
 } from "../repository/urls.repository.js";
 
 
@@ -13,13 +14,10 @@ export async function shorten(req, res) {
     const shortUrl = nanoid();
 
     try {
-        // entered here
         const result = await createLink({ userId, url, shortUrl });
-        console.log(result)
         if (result.rowCount === 0) {
             return res.status(409).send("Não foi possível encurtar esta url!");
         }
-        console.log("RESULT")
         const { id } = result.rows[0];
         res.status(201).send({ id, shortUrl });
     } catch (err) {
@@ -78,19 +76,8 @@ export async function deleteUrl(req, res) {
 
 export async function getRanking(req, res) {
     try {
-        const result = await getLinkById(id);
-        if (result.rowCount === 0) {
-            return req.status(404).send("Esta url encurtada não existe!");
-        }
-
-        const { userId } = result.rows[0];
-        if (userId !== user.id) {
-            return res.status(401).send("Acesso negado!");
-        }
-        
-        const resultDel = await deleteLink(id, user.id);
-        res.send({ id, shortUrl, url });
-        res.sendStatus(204);
+        const result = await getRankCount();
+        res.send(result.rows);
     } catch (err) {
         res.status(500).send(err.message);
     }
